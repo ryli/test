@@ -1,13 +1,18 @@
 {
   "name": "es6",
   "version": "1.0.0",
-  "description": "test",
-  "main": "test.js",
+  "description": "ES6 test",
+  "main": "app.js",
   "dependencies": {
+    "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.3.13",
-    "babel-preset-stage-2": "^6.3.13"
+    "babel-preset-stage-2": "^6.3.13",
+    "babel-runtime": "^6.3.19"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-preset-es2015": "^6.3.13",
+    "gulp-babel": "^6.1.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
