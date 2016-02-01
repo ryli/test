@@ -6,6 +6,9 @@ const cssnano = require('gulp-cssnano');
 const concat = require('gulp-concat');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const sourcemaps = require('gulp-sourcemaps');
+const gutil = require('gulp-util');
 
 // 编译并压缩js
 gulp.task('convertJS', function(){
@@ -37,11 +40,17 @@ gulp.task('watch', function(){
 // browserify
 gulp.task("browserify", function () {
     var b = browserify({
-        entries: "dist/js/app.js"
+        entries: "dist/js/app.js",
+        debug: true
     });
 
     return b.bundle()
         .pipe(source("bundle.js"))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe(uglify())
+            .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest("dist/js"));
 });
 

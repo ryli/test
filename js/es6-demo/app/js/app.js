@@ -1,5 +1,5 @@
 'use strict'
 
-let [x, y] = [1, 2]
+let [x, y, z] = [1, 2, 3]
 
-console.log(x, y)
+console.log(x, y, z)
