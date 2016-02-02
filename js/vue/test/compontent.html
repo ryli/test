@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>component</title>
+    <style>
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <my-component></my-component>
+    </div>
+
+    <script type="text/x-template" id="child">
+
+    </script>
+
+    <template id="child-template" v-on:child-msg="handleIt">
+        <input type="text" v-model="msg">
+        <button @click="notify">Dispatch Event</button>
+    </template>
+
+    <template id="parent-template" v-on:child-msg="handleIt">
+        <p>Message: {{ message | json }}</p>
+        <child ></child>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
+    <script>
+Vue.component('child', {
+    template: '#child-template',
+    data: function () {
+        return {msg: 'hello'}
+    },
+    methods: {
+        notify: function () {
+          console.log(this.msg)
+           if (this.msg.trim()) {
+              this.$dispatch('child-msg', this.msg)
+              this.msg = ''
+           }
+        }
+    }
+})
+
+var parent = new Vue({
+    el: '#parent-template',
+    data: {
+        message: []
+    },
+    events: {
+        'child-msg': function (msg) {
+            this.message.push(msg)
+        },
+        'handleIt': function (msg) {
+          console.log(this)
+            this.message.push(msg)
+
+        }
+    }
+})
+    </script>
+</body>
+</html>

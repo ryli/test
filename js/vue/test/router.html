@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+.v-link-active {
+    color: red;
+}
+.custom-active-class {
+    color: yellow;
+}
+.page {
+    background-color: #831;
+    padding: 100px;
+}
+.subpage {
+    background-color: #158;
+}
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h1>vue router</h1>
+        <ul>
+            <li v-link="{ path: '/page1', exact: true }">Go to 1</li>
+            <li v-link="{ path: '/page2?user=2'}">Go to 2</li>
+            <li v-link="{ name: 'page3', params: { userId: 2 }}"> name to page3</li>
+            <li v-link="{ path: '/page1/subpage1'}">Go to sub 1</li>
+            <li v-link="{ path: '/page1/subpage2'}">Go to sub 2</li>
+        </ul>
+        <p>path: {{ $route.path}} <br> params: {{ $route.params | json }} </p>
+        <router-view></router-view>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.router/0.7.10/vue-router.min.js"></script>
+
+    <script>
+var Page1 = Vue.extend({
+    template:
+        '<div class="page">' +
+        '<p>page 1</p>' +
+        '<ul>' +
+            '<li v-link="{ path: \'/page1/subpage1\', activeClass: \'custom-active-class\' }">Go to sub 1</li>' +
+            '<li v-link="{ path: \'/page1/subpage2\'}">Go to sub 2</li>' +
+        '</ul>' +
+        '<router-view></router-view>' +
+        '</div>'
+})
+
+var SubPage1 = Vue.extend({
+    template: '<p class="page subpage">subpage 1 path:{{ $route.path}} params:{{ $route.params | json }}</p>'
+})
+
+var SubPage2 = Vue.extend({
+    template: '<p class="page subpage">subpage 2 path:{{ $route.path}} params:{{ $route.params | json }}</p>'
+})
+
+var Page2 = Vue.extend({
+    template: '<p class="page">page 2 path:{{ $route.path}} params:{{ $route.params | json }}</p>'
+})
+
+var Page3 = Vue.extend({
+    template: '<p class="page">page 3 path:{{ $route.path}} params:{{ $route.params | json }}</p>'
+})
+
+var App = Vue.extend({})
+
+var router = new VueRouter()
+
+router.map({
+    '/page1': {
+        component: Page1,
+        subRoutes: {
+            '/': {
+                component: {
+                    template: '<p>default sub view </p>'
+                }
+            },
+            '/subpage1': {
+                component: SubPage1
+            },
+            '/subpage2': {
+                component: SubPage2
+            }
+        }
+    },
+    '/page2': {
+        name: 'page2',
+        component: Page2,
+        auth: true
+    },
+    '/page3': {
+        name: 'page3',
+        component: Page3,
+        auth: true
+    },
+})
+
+router.start(App, '#app')
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>grid 2</title>
+    <style>
+body {
+  font-family: Helvetica Neue, Arial, sans-serif;
+  font-size: 14px;
+  color: #444;
+}
+
+table {
+  border: 2px solid #42b983;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+th {
+  background-color: #42b983;
+  color: rgba(255,255,255,0.66);
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -user-select: none;
+}
+
+td {
+  background-color: #f9f9f9;
+}
+
+th, td {
+  min-width: 120px;
+  padding: 10px 20px;
+}
+
+th.active {
+  color: #fff;
+}
+
+th.active .arrow {
+  opacity: 1;
+}
+
+.arrow {
+  display: inline-block;
+  vertical-align: middle;
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  opacity: 0.66;
+}
+
+.arrow.asc {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #fff;
+}
+
+.arrow.dsc {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #fff;
+}
+
+#search {
+  margin-bottom: 10px;
+}
+    </style>
+</head>
+<body>
+
+<!-- component template -->
+<script type="text/x-template" id="grid-template">
+  <table>
+    <thead>
+      <tr>
+        <th v-for="key in columns"
+          @click="sortBy(key)"
+          :class="{active: sortKey == key}">
+          {{key | capitalize}}
+          <span class="arrow"
+            :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="
+        entry in data
+        | filterBy search
+        | orderBy sortKey sortOrders[sortKey]">
+        <td v-for="column in columns"
+        v-html="entry[column] | render entry column">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <demo-pagination :config="pagerConf"></demo-pagination>
+</script>
+
+<script type="text/x-template" id="pagination-template">
+  <div class="pager">
+    <ul class="pagination" v-bind:config="" >
+      <li v-for="x in pagination"></li>
+    </ul>
+  </div>
+</script>
+
+<!-- demo root element -->
+<div id="demo">
+  <form id="search">
+    Search <input name="query" v-model="searchQuery">
+  </form>
+  <demo-grid
+    :data="gridData"
+    :columns="gridColumns"
+    :operate="operate"
+    :search="searchQuery">
+  </demo-grid>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
+    <script>
+Vue.component('demo-pagination', {
+  template: '#pagination-template',
+  props: {
+    config: Object
+  }
+})
+
+// register the grid component
+Vue.component('demo-grid', {
+  template: '#grid-template',
+  props: {
+    data: Array,
+    columns: Array,
+    operate: Array,
+    search: String
+  },
+  data: function () {
+    var sortOrders = {}
+    this.columns.forEach(function (key) {
+      sortOrders[key] = 1
+    })
+    return {
+      sortKey: '',
+      sortOrders: sortOrders
+    }
+  },
+  methods: {
+    sortBy: function (key) {
+      this.sortKey = key
+      this.sortOrders[key] = this.sortOrders[key] * -1
+    },
+    myAlert: function (value) {
+      console.log(value)
+    }
+  }
+})
+
+Vue.filter('render', function(value, row, column) {
+  console.info(1, value, row, column)
+  console.warn(this.operate[0])
+    if (this.columns.indexOf(column)==-1) {
+      // return value;
+    }
+
+  var regex;
+var template = wrapTemplate(this.operate[0]);
+
+ /* this.allColumns.forEach(function(col) {
+
+    regex = new RegExp("{"+ col + "}","g");
+    template = template.replace(regex,String(row[col]));
+
+  }.bind(this));*/
+
+  return template;
+
+
+  var regex;
+
+  if (typeof this.options.templates[column]=='function') {
+    var tpl = this.options.templates[column](row);
+    return wrapTemplate(tpl);
+  }
+
+  var template = wrapTemplate(this.options.templates[column]);
+
+  this.allColumns.forEach(function(col) {
+
+    regex = new RegExp("{"+ col + "}","g");
+    template = template.replace(regex,String(row[col]));
+
+  }.bind(this));
+
+  return template;
+})
+
+// bootstrap the demo
+var demo = new Vue({
+  el: '#demo',
+  data: {
+    searchQuery: '',
+    gridColumns: ['name', 'power', 'operateee', 'operate'],
+    gridData: [
+      { name: 'Chuck Norris', power: Infinity , operateee:'<a href="javascript:;" @click="function(){console.log(233)}">详情</a>'},
+      { name: 'Bruce Lee', power: 9000 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
+      { name: 'Jackie Chan', power: 7000 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
+      { name: 'Jackie Chan1', power: 7001 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
+      { name: 'Jackie Chan2', power: 7002 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
+      { name: 'Jackie Chan3', power: 7003 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
+      { name: 'Jackie Chan4', power: 7004 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
+      { name: 'Jet Li', power: 8000, operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>' }
+    ],
+    operate: [
+      '<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'
+    ],
+    pagerConf: {
+      totalPage : 0,
+      currPage : 1,
+      prevShow : 3,
+      nextShow : 3,
+      onChange : function (num){
+          console.log(num)
+      }
+    }
+  },
+  methods: {
+    myAlert: function (value) {
+      console.log(value)
+    }
+  }
+})
+
+function wrapTemplate(tpl) {
+  return "<span class='VueTables__template'>" +  tpl + "</span>";
+}
+
+
+    </script>
+</body>
+</html>

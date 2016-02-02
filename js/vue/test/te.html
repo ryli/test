@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>table</title>
+    <style>
+body {
+  font-family: Helvetica Neue, Arial, sans-serif;
+  font-size: 14px;
+  color: #444;
+}
+
+    </style>
+</head>
+<body>
+
+  <div id="app">
+    <table>
+      <tr v-for="row in m" :index="$index">
+        <td v-for="d in row" v-html="d | render $key row" :key="$key"></td>
+      </tr>
+    </table>
+  </div>
+
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
+    <script>
+Vue.filter('render', function(value, key, row) {
+  // console.log(value, key, row)
+    value = String(value)
+    var regex
+      for(var i in row) {
+        regex = new RegExp("{ "+ i + " }","g");
+        value = value.replace(regex, String(row[i]));
+      }
+    value = '<span class="vue-opeate-template">' +  value + '</span>'
+    // this.$compile(this.$els.p)
+    return value
+})
+
+var unCompile = [];
+function doCompile (vm) {
+    var vueOpeateTemplate = vm.$el.querySelectorAll('.vue-opeate-template')
+    for (var i = 0; i < vueOpeateTemplate.length; ++i) {
+      unCompile.push(vm.$compile(vueOpeateTemplate[i]))
+    }
+}
+
+var vm = new Vue({
+  el: '#app',
+  data: {
+    m: [
+    {id: 1, a:1, b:2, o: '<a href="javascript:;" v-on:click="malert({ id }, { id })">详情</a> <a href="javascript:;" v-on:click="malert({ id })">详情2</a>'},
+    {id: 2, a:1, b:2, o: '<a href="javascript:;" v-on:click="malert({ id })">详情</a>'}
+    ],
+    operate: ['o'],
+  },
+  methods: {
+    malert: function(val) {
+      console.log(val, arguments)
+    }
+  },
+  compiled: function () {
+    console.log('compiled')
+  },
+  ready: function () {
+      /*var vueOpeateTemplate = this.$el.querySelectorAll('.vue-opeate-template')
+      for (var i = 0; i < vueOpeateTemplate.length; ++i) {
+        unCompile.push(this.$compile(vueOpeateTemplate[i]))
+      }*/
+      doCompile(this)
+  },
+  watch: {
+    m: function (val) {
+      console.log(val)
+      var vueOpeateTemplate = this.$el.querySelectorAll('.vue-opeate-template')
+      for (var i = 0; i < vueOpeateTemplate.length; ++i) {
+        unCompile.push(this.$compile(vueOpeateTemplate[i]))
+      }
+    }
+  }
+})
+
+var doCompile = function (unCompile) {
+  var vueOpeateTemplate = this.$el.querySelectorAll('.vue-opeate-template')
+  for (var i = 0; i < vueOpeateTemplate.length; ++i) {
+    unCompile.push(this.$compile(vueOpeateTemplate[i]))
+  }
+}
+    </script>
+</body>
+</html>

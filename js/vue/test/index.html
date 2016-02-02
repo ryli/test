@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <p > {{message}} {{message2 }}</p>
+        <button v-on:click="reverseMessage">reverseMessage</button>
+    </div>
+<hr>
+    <div id="app2">
+        <input type="text" v-model="newTodo" @keyup.enter="addTodo">
+        <ul>
+            <li v-for="todo in todos">
+                <span v-text="todo.text"></span>
+                <button @click="removeTodo($index)">X</button>
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
+    <script>
+var vm1 = new Vue({
+    el: '#app',
+    data: {
+        message: 'hello'
+    },
+    computed: {
+        message2 : function () {
+            return this.message + '2'
+        }
+    },
+    methods: {
+        reverseMessage: function () {
+            this.message = this.message.split('').reverse().join('')
+        }
+    }
+})
+
+var vm2 = new Vue({
+    el: '#app2',
+    data: {
+        newTodo: '',
+        todos: [
+            {text: '第一个Todo'}
+        ]
+    },
+    methods: {
+        addTodo: function () {
+            var text = this.newTodo.trim()
+            if (text) {
+                this.todos.push({text: text})
+                this.newTodo = ''
+            }
+        },
+        removeTodo: function (index) {
+            this.todos.splice(index, 1)
+        }
+    }
+})
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+
+    <!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8"/>
+        <title>VueUI-pager</title>
+        <link href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="http://sandbox.runjs.cn/uploads/rs/233/lhdgeqko/vueUI.css">
+    </head>
+    <body >
+
+<div id="pagerTest">
+    <vue-pager v-with="config:pagerConf" vue-id="firstPager"></vue-pager>
+
+    <div>
+        <button class="btn btn-default" v-on="click:pagerConf.totalPage=200">改变总页码</button>
+        <button class="btn btn-default" v-on="click:pagerConf.currPage=20">改变当前页码</button>
+        <button class="btn btn-default" v-on="click:pagerConf.prevShow=5">改变前置页码数</button>
+        <button class="btn btn-default" v-on="click:pagerConf.nextShow=10">改变后置页码数</button>
+    </div>
+
+</div>
+
+    <script type="text/javascript" src="http://sandbox.runjs.cn/uploads/rs/233/lhdgeqko/jquery.js"></script>
+    <script type="text/javascript" src="http://sandbox.runjs.cn/uploads/rs/233/lhdgeqko/vue.js"></script>
+    <script type="text/javascript" src="http://sandbox.runjs.cn/uploads/rs/233/lhdgeqko/vueUI.js"></script>
+<script>
+var pagerConf = {
+    totalPage : 0,
+    currPage : 1,
+    prevShow : 3,
+    nextShow : 3,
+    onChange : function (num){
+        console.log(num)
+    }
+}
+
+var vm = new Vue({
+    el : '#pagerTest',
+    data : {
+        pagerConf : pagerConf
+    }
+})
+</script>
+
+    </body>
+</html>

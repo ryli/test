@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义指定</title>
+    <style>
+select {
+  min-width: 300px;
+}
+[v-cloak] {
+  /*display: none;*/
+  visibility: hidden;
+}
+
+    </style>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css">
+</head>
+<body>
+
+<div id="el">
+  <p v-cloak>Selected: {{selected}}</p>
+  <select v-select="selected" :options="options">
+    <option value="0">default</option>
+  </select>
+</div>
+
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
+    <script>
+Vue.directive('select', {
+  twoWay: true,
+  priority: 1000,
+
+  params: ['options'],
+
+  bind: function () {
+    var self = this
+    $(this.el)
+      .select2({
+        data: this.params.options
+      })
+      .on('change', function () {
+        // console.log(self)
+        self.set(this.value)
+      })
+  },
+  update: function (value) {
+    $(this.el).val(value).trigger('change')
+  },
+  unbind: function () {
+    $(this.el).off().select2('destroy')
+  }
+})
+
+var vm = new Vue({
+  el: '#el',
+  data: {
+    selected: 0,
+    options: [
+      { id: 1, text: 'hello' },
+      { id: 2, text: 'what' }
+    ]
+  }
+})
+    </script>
+</body>
+</html>

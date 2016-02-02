@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>comp</title>
+    <style>
+h3 {
+    border: 1px solid #ddd;
+}
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h3>{{ msg }}</h3>
+        <mcomp :title="msg"></mcomp>
+        <mcomp :title="msg"></mcomp>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+
+    <script>
+var comp = Vue.extend({
+    template: '<h3 @click="clickHandle">{{ title }} - {{ subtitle }}</h3>',
+    props: ['title'],
+    data: function () {
+        return {
+            subtitle: 'world'
+        }
+    },
+    created: function () {
+        console.log(this.title)
+    },
+    methods: {
+        clickHandle: function () {
+            this.title = 'clickTitle'
+            this.subtitle = 'clickSubTitle'
+        }
+    }
+})
+
+var vm = new Vue({
+    el: '#app',
+    data: {
+        msg: 'hello'
+    },
+    components: {
+        mcomp: comp
+    }
+})
+    </script>
+</body>
+</html>
