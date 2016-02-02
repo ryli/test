@@ -1,4 +1,4 @@
-just-test
+test
 ========
 
-my first repo,just for test
+Just for testing and learning
