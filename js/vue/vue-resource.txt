@@ -1,0 +1,17 @@
+office:
+    http://vuejs.github.io//vue-loader/
+    https://github.com/vuejs/vue-hot-reload-api
+
+
+issues:
+    https://github.com/vuejs/Discussion/issues/254
+
+user:
+    https://github.com/matfish2/vue-tables
+    https://github.com/leinue/vue-feeds
+    https://github.com/Coffcer/vue-chat
+    https://github.com/kzima/vuestrap-base-components
+    https://github.com/JsAaron/vue-gulp-webpack
+
+learn:
+    http://jiongks.name/blog/vue-code-review/
