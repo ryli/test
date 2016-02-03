@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>validator</title>
+    <style>
+.warn {
+    background-color: #821;
+}
+
+    </style>
+</head>
+<body>
+
+<div id="app">
+  <validator name="validation1">
+    <form novalidate>
+      <div class="username-field">
+        <label for="username">username:</label>
+        <input id="username" @dirty="onDirty('username')" v-model="username" type="text" v-validate:username="['required']">
+      </div>
+      <div class="comment-field">
+        <label for="comment">comment:</label>
+        <input id="comment" @dirty="onDirty('comment')" type="text" v-validate:comment="commonRule">
+      </div>
+      <div class="errors">
+        <p class="warn" v-if="$validation1.username.required && $validation1.username.dirty">Required your name.</p>
+        <p class="warn" v-if="$validation1.comment.minlength && $validation1.comment.dirty">Your comment is too short.</p>
+        <p class="warn" v-if="$validation1.comment.maxlength && $validation1.comment.dirty">Your comment is too long.</p>
+      </div>
+      <input type="submit" value="send" v-if="$validation1.valid">
+      <button type="button" @click="onReset">Validation Reset</button>
+      <!-- <pre>{{ $validation1 | json }}</pre> -->
+    </form>
+  </validator>
+</div>
+
+<hr>
+
+<div id="app2">
+  <validator name="validation2">
+    <form novalidate>
+      <p class="validate-field" v-for="field in fields">
+      <label :for="field.id">{{field.label}}</label>
+      <input type="text" :id="field.id" :placeholder="field.placeholder" field="{{field.name}}" v-validate="field.validate">
+      </p>
+      <!-- <pre>{{ $validation2 | json }}</pre> -->
+    </form>
+  </validator>
+</div>
+
+<hr>
+
+<div id="app3">
+  <validator name="validation3">
+    <form novalidate>
+      <h1>Survey</h1>
+      <fieldset>
+        <legend>Which do you like fruit ?</legend>
+        <input id="apple" type="checkbox" value="apple" v-validate:fruits="{
+          required: { rule: true, message: requiredErrorMsg },
+          minlength: { rule: 1, message: minlengthErrorMsg },
+          maxlength: { rule: 2, message: maxlengthErrorMsg }
+        }">
+        <label for="apple">Apple</label>
+        <input id="orange" type="checkbox" value="orange" v-validate:fruits>
+        <label for="orange">Orage</label>
+        <input id="grape" type="checkbox" value="grage" v-validate:fruits>
+        <label for="grape">Grape</label>
+        <input id="banana" type="checkbox" value="banana" v-validate:fruits>
+        <label for="banana">Banana</label>
+        <ul class="errors">
+          <li v-for="msg in $validation3.fruits.messages">
+            <p>{{msg}}</p>
+          </li>
+        </ul>
+      </fieldset>
+    </form>
+  </validator>
+</div>
+
+<hr>
+
+<div id="app4">
+  <validator name="validation4">
+    <form novalidate>
+      <h1>Survey</h1>
+      <fieldset>
+        <legend>Which do you like fruit ?</legend>
+        <input id="apple" type="radio" name="fruit" value="apple" v-validate:fruits="{
+          required: { rule: true, message: requiredErrorMsg }
+        }">
+        <label for="apple">Apple</label>
+        <input id="orange" type="radio" name="fruit" value="orange" v-validate:fruits>
+        <label for="orange">Orage</label>
+        <input id="grape" type="radio" name="fruit" value="grage" v-validate:fruits>
+        <label for="grape">Grape</label>
+        <input id="banana" type="radio" name="fruit" value="banana" v-validate:fruits>
+        <label for="banana">Banana</label>
+        <ul class="errors">
+          <li v-for="msg in $validation4.fruits.messages">
+            <p>{{msg}}</p>
+          </li>
+        </ul>
+      </fieldset>
+    </form>
+  </validator>
+</div>
+
+<hr>
+
+<div id="app5">
+  <validator name="validation5">
+    <form novalidate>
+      <select v-validate:lang="{ required: true }">
+        <option value="">----- select your favorite programming language -----</option>
+        <option value="javascript">JavaScript</option>
+        <option value="ruby">Ruby</option>
+        <option value="python">Python</option>
+        <option value="perl">Perl</option>
+        <option value="lua">Lua</option>
+        <option value="go">Go</option>
+        <option value="rust">Rust</option>
+        <option value="elixir">Elixir</option>
+        <option value="c">C</option>
+        <option value="none">Not a nothing here</option>
+      </select>
+      <div class="errors">
+        <p v-if="$validation5.lang.required">Required !!</p>
+      </div>
+    </form>
+  </validator>
+</div>
+
+<hr>
+
+<div id="app6">
+    <validator name="validation6" :groups="['user', 'password']">
+      username: <input type="text" group="user" v-validate:username="['required']"><br />
+      password: <input type="text" group="password" v-validate:password1="{ minlength: 8, required: true }"/><br />
+      password (confirm): <input type="text" group="password" v-validate:password2="{ minlength: 8, required: true }"/>
+      <div class="user">
+        <span v-if="$validation6.user.invalid">Invalid yourname !!</span>
+      </div>
+      <div class="password">
+        <span v-if="$validation6.password.invalid">Invalid password input !!</span>
+      </div>
+    </validator>
+</div>
+
+<hr>
+
+<div id="app7">
+  <validator name="validation7">
+      username: <input type="text" v-validate:username="{
+        required: { rule: true, message: 'required you name !!' }
+      }"><br />
+      password: <input type="text" v-validate:password="{
+        required: { rule: true, message: 'required you password !!' },
+        minlength: { rule: 8, message: 'your password short too !!' }
+      }"/><br />
+      <div class="errors">
+        <ul>
+          <li v-for="obj in $validation7.messages">
+            <div class="{{$key}}" v-for="msg in obj">
+              <p>{{$key}}: {{msg}}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </validator>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.validator/2.0.0-alpha.17/vue-validator.min.js"></script>
+    <script>
+var vm = new Vue({
+  el: '#app',
+  data: {
+    commonRule: {
+        minlength: 2,
+        maxlength: 3
+    },
+    username: '',
+  },
+  methods: {
+    onReset: function () {
+        this.$validatorReset()
+    },
+    onDirty: function (args) {
+        console.log(args)
+    }
+  }
+})
+
+var vm2 = new Vue({
+  el: '#app2',
+  data: {
+    fields: [{
+      id: 'username',
+      label: 'username',
+      name: 'username',
+      placeholder: 'input your username',
+      validate: { required: true, maxlength: 16 }
+    }, {
+      id: 'message',
+      label: 'message',
+      name: 'message',
+      placeholder: 'input your message',
+      validate: { required: true, minlength: 8 }
+    }]
+  }
+})
+
+var vm3 = new Vue({
+  el: '#app3',
+  computed: {
+    requiredErrorMsg: function () {
+      return 'Required fruit !!'
+    },
+    minlengthErrorMsg: function () {
+      return 'Please chose at least 1 fruit !!'
+    },
+    maxlengthErrorMsg: function () {
+      return 'Please chose at most 2 fruits !!'
+    }
+  }
+})
+
+var vm4 = new Vue({
+  el: '#app4',
+  computed: {
+    requiredErrorMsg: function () {
+      return 'Required fruit !!'
+    }
+  }
+})
+
+var vm5 = new Vue({ el: '#app5'})
+
+var vm6 = new Vue({ el: '#app6'})
+
+var vm7 = new Vue({ el: '#app7'})
+
+    </script>
+
+    <script type='text/javascript' id="__bs_script__">//<![CDATA[
+    document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.2.11.1.js'><\/script>".replace("HOST", location.hostname));
+//]]></script>
+
+</body>
+</html>
