@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>grid 2</title>
+    <title>table</title>
     <style>
 body {
   font-family: Helvetica Neue, Arial, sans-serif;
@@ -83,29 +83,28 @@ th.active .arrow {
             :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
           </span>
         </th>
+        <th>操作</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="
         entry in data
-        | filterBy search
+        | filterBy filterKey
         | orderBy sortKey sortOrders[sortKey]">
-        <td v-for="column in columns"
-        v-html="entry[column] | render entry column">
+        <td v-for="key in columns">
+          {{entry[key]}}
+        </td>
+        <td>
+          <button v-if="entry['id']"
+            :data-id="entry['id']"
+            @click="editRow(entry['id'])">编辑</button>
+          <button v-if="(entry['id'] % 2) > 0"
+            :data-id="entry['id']"
+            @click="delRow(entry['id'], entry)">删除</button>
         </td>
       </tr>
     </tbody>
   </table>
-
-  <demo-pagination :config="pagerConf"></demo-pagination>
-</script>
-
-<script type="text/x-template" id="pagination-template">
-  <div class="pager">
-    <ul class="pagination" v-bind:config="" >
-      <li v-for="x in pagination"></li>
-    </ul>
-  </div>
 </script>
 
 <!-- demo root element -->
@@ -116,29 +115,20 @@ th.active .arrow {
   <demo-grid
     :data="gridData"
     :columns="gridColumns"
-    :operate="operate"
-    :search="searchQuery">
+    :filter-key="searchQuery">
   </demo-grid>
 </div>
 
     <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
 
     <script>
-Vue.component('demo-pagination', {
-  template: '#pagination-template',
-  props: {
-    config: Object
-  }
-})
-
 // register the grid component
 Vue.component('demo-grid', {
   template: '#grid-template',
   props: {
     data: Array,
     columns: Array,
-    operate: Array,
-    search: String
+    filterKey: String
   },
   data: function () {
     var sortOrders = {}
@@ -155,49 +145,14 @@ Vue.component('demo-grid', {
       this.sortKey = key
       this.sortOrders[key] = this.sortOrders[key] * -1
     },
-    myAlert: function (value) {
-      console.log(value)
+    editRow: function (id) {
+      console.log(id, this.data, this.columns)
+    },
+    delRow: function (id, row) {
+      console.log(id, this)
+      this.data.$remove(row)
     }
   }
-})
-
-Vue.filter('render', function(value, row, column) {
-  console.info(1, value, row, column)
-  console.warn(this.operate[0])
-    if (this.columns.indexOf(column)==-1) {
-      // return value;
-    }
-
-  var regex;
-var template = wrapTemplate(this.operate[0]);
-
- /* this.allColumns.forEach(function(col) {
-
-    regex = new RegExp("{"+ col + "}","g");
-    template = template.replace(regex,String(row[col]));
-
-  }.bind(this));*/
-
-  return template;
-
-
-  var regex;
-
-  if (typeof this.options.templates[column]=='function') {
-    var tpl = this.options.templates[column](row);
-    return wrapTemplate(tpl);
-  }
-
-  var template = wrapTemplate(this.options.templates[column]);
-
-  this.allColumns.forEach(function(col) {
-
-    regex = new RegExp("{"+ col + "}","g");
-    template = template.replace(regex,String(row[col]));
-
-  }.bind(this));
-
-  return template;
 })
 
 // bootstrap the demo
@@ -205,41 +160,15 @@ var demo = new Vue({
   el: '#demo',
   data: {
     searchQuery: '',
-    gridColumns: ['name', 'power', 'operateee', 'operate'],
+    gridColumns: ['id', 'name', 'power'],
     gridData: [
-      { name: 'Chuck Norris', power: Infinity , operateee:'<a href="javascript:;" @click="function(){console.log(233)}">详情</a>'},
-      { name: 'Bruce Lee', power: 9000 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
-      { name: 'Jackie Chan', power: 7000 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
-      { name: 'Jackie Chan1', power: 7001 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
-      { name: 'Jackie Chan2', power: 7002 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
-      { name: 'Jackie Chan3', power: 7003 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
-      { name: 'Jackie Chan4', power: 7004 , operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'},
-      { name: 'Jet Li', power: 8000, operateee:'<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>' }
-    ],
-    operate: [
-      '<a href="javascript:;" @click="myAlert(\'' + 98 +'\')">详情</a>'
-    ],
-    pagerConf: {
-      totalPage : 0,
-      currPage : 1,
-      prevShow : 3,
-      nextShow : 3,
-      onChange : function (num){
-          console.log(num)
-      }
-    }
-  },
-  methods: {
-    myAlert: function (value) {
-      console.log(value)
-    }
+      { id: 1, name: 'Chuck Norris', power: Infinity },
+      { id: 2, name: 'Bruce Lee', power: 9000 },
+      { id: 3, name: 'Jackie Chan', power: 7000 },
+      { id: 4, name: 'Jet Li', power: 8000 }
+    ]
   }
 })
-
-function wrapTemplate(tpl) {
-  return "<span class='VueTables__template'>" +  tpl + "</span>";
-}
-
 
     </script>
 </body>
