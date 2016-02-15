@@ -97,10 +97,10 @@ th.active .arrow {
         <td>
           <button v-if="entry['id']"
             :data-id="entry['id']"
-            @click="editRow(entry['id'])">编辑</button>
+            @click="editRow(entry)">编辑</button>
           <button v-if="(entry['id'] % 2) > 0"
             :data-id="entry['id']"
-            @click="delRow(entry['id'], entry)">删除</button>
+            @click="delRow(entry)">删除</button>
         </td>
       </tr>
     </tbody>
@@ -145,11 +145,12 @@ Vue.component('demo-grid', {
       this.sortKey = key
       this.sortOrders[key] = this.sortOrders[key] * -1
     },
-    editRow: function (id) {
-      console.log(id, this.data, this.columns)
+    editRow: function (row) {
+      console.log(row, this.data, this.columns)
+      row.id =  10
     },
-    delRow: function (id, row) {
-      console.log(id, this)
+    delRow: function (row) {
+      console.log(row, this)
       this.data.$remove(row)
     }
   }
