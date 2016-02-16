@@ -138,7 +138,7 @@ th.active .arrow {
         <li v-if="showFirst" ><a @click="jumpFirst">«</a></li>
         <li v-if="showPrev" ><a @click="--currentPage">‹</a></li>
         <li v-for="index in indexs"
-        :class="{'active': currentPage == index}"><a @click="changePage(index)">{{ index }}</a></li>
+            :class="{'active': currentPage == index}"><a @click="changePage(index)">{{ index }}</a></li>
         <li v-if="showNext" ><a @click="++currentPage">›</a></li>
         <li v-if="showLast" ><a @click="jumpLast">»</a></li>
         <input class="jump-page" type="number" number min="1" max="{{ pageLength }}" v-model="jumpPageNumber" placeholder="">
@@ -171,27 +171,27 @@ th.active .arrow {
         <tr v-for="
         entry in currentData
         ">
-        <td>{{ $index + 1 }}</td>
-        <td v-for="key in columns">
-            {{entry[key]}}
-        </td>
-        <td>
-            <button v-if="entry['id']"
-            :data-id="entry['id']"
-            @click="editRow(entry)">编辑</button>
-            <button v-if="(entry['id'] % 2) > 0"
-            :data-id="entry['id']"
-            @click="delRow(entry)">删除</button>
-        </td>
+            <td>{{ $index + 1 }}</td>
+            <td v-for="key in columns">
+                {{entry[key]}}
+            </td>
+            <td>
+                <button v-if="entry['id']"
+                    :data-id="entry['id']"
+                    @click="editRow(entry)">编辑</button>
+                <button v-if="(entry['id'] % 2) > 0"
+                    :data-id="entry['id']"
+                    @click="delRow(entry)">删除</button>
+            </td>
         </tr>
     </tbody>
     </table>
 
     <table-pagination
-    :data-length="dataLength"
-    :page-size="pageSize"
-    :current-page.sync="currentPage"
-    :show-pagination="showPagination"></table-pagination>
+        :data-length="dataLength"
+        :page-size="pageSize"
+        :current-page.sync="currentPage"
+        :show-pagination="showPagination"></table-pagination>
 </script>
 
 <!-- demo root element -->
@@ -200,11 +200,11 @@ th.active .arrow {
     Search <input name="query" v-model="searchQuery">
     </form>
     <demo-grid
-    :data="gridData"
-    :columns="gridColumns"
-    :filter-key="searchQuery"
-    :page-size="pageSize"
-    :pagination="true">
+        :data="gridData"
+        :columns="gridColumns"
+        :filter-key="searchQuery"
+        :page-size="pageSize"
+        :pagination="true">
     </demo-grid>
 </div>
 
@@ -214,93 +214,93 @@ th.active .arrow {
 var pagination = Vue.extend({
     template: '#pagination-template',
     props: {
-    dataLength: Number,
-    pageSize: Number,
-    currentPage: {
-        type: Number,
-    },
-    showPagination: Boolean
-    },
-    data: function () {
-    return {
-        jumpPageNumber: ''
-    }
+        dataLength: Number,
+        pageSize: Number,
+        currentPage: {
+            type: Number,
+        },
+        showPagination: Boolean
+        },
+        data: function () {
+        return {
+            jumpPageNumber: ''
+        }
     },
     computed: {
-    pageLength: function(){
-        return Math.ceil(this.dataLength / this.pageSize)
-    },
-    indexs: function(){
-        var prev = 1
-        var next = this.pageLength
-        var pageList = []
-        if(this.pageLength>= 11){
-        if(this.currentPage > 5 && this.currentPage < this.pageLength-4){
-            prev = this.currentPage - 5
-            next = this.currentPage + 4
-        }else{
-            if(this.currentPage<=5){
-            prev = 1
-            next = 10
-            }else{
-            next = this.pageLength
-            prev = this.pageLength -9
+        pageLength: function(){
+            return Math.ceil(this.dataLength / this.pageSize)
+        },
+        indexs: function(){
+            var prev = 1
+            var next = this.pageLength
+            var pageList = []
+            if(this.pageLength>= 11){
+                if(this.currentPage > 5 && this.currentPage < this.pageLength-4){
+                    prev = this.currentPage - 5
+                    next = this.currentPage + 4
+                }else{
+                    if(this.currentPage<=5){
+                        prev = 1
+                        next = 10
+                    }else{
+                        next = this.pageLength
+                        prev = this.pageLength -9
+                    }
+                }
             }
+            while (prev <= next){
+                pageList.push(prev)
+                ++prev
+            }
+            console.log('list', pageList)
+            return pageList
+        },
+        showPrev: function(){
+            return this.currentPage == 1 ? false : true
+        },
+        showNext: function(){
+            return this.currentPage == this.pageLength ? false : true
+        },
+        showFirst: function(){
+            return this.currentPage == 1 ? false : true
+        },
+        showLast: function(){
+            return this.currentPage == this.pageLength ? false : true
+        },
+        firstIndex: function(){
+            if (this.dataLength <= this.pageSize) {
+                return 1
+            } else {
+                return (this.currentPage - 1) * this.pageSize + 1
+            }
+        },
+        lastIndex: function(){
+            return this.currentPage == this.pageLength ? this.dataLength : this.currentPage * this.pageSize
         }
-        }
-        while (prev <= next){
-        pageList.push(prev)
-        ++prev
-        }
-        console.log('list', pageList)
-        return pageList
-    },
-    showPrev: function(){
-        return this.currentPage == 1 ? false : true
-    },
-    showNext: function(){
-        return this.currentPage == this.pageLength ? false : true
-    },
-    showFirst: function(){
-        return this.currentPage == 1 ? false : true
-    },
-    showLast: function(){
-        return this.currentPage == this.pageLength ? false : true
-    },
-    firstIndex: function(){
-        if (this.dataLength <= this.pageSize) {
-        return 1
-        } else {
-        return (this.currentPage - 1) * this.pageSize + 1
-        }
-    },
-    lastIndex: function(){
-        return this.currentPage == this.pageLength ? this.dataLength : this.currentPage * this.pageSize
-    }
     },
     methods: {
-    changePage: function(data){
-        if(data != this.currentPage){
-        this.currentPage = data
+        changePage: function(data){
+            if(data != this.currentPage){
+            this.currentPage = data
+            }
+        },
+        jumpFirst: function() {
+            this.currentPage = 1
+        },
+        jumpLast: function(){
+            this.currentPage = this.pageLength
+        },
+        jumpPage: function() {
+            if (this.currentPage != this.jumpPageNumber && this.jumpPageNumber <= this.pageLength && this.jumpPageNumber > 0) {
+            this.currentPage = this.jumpPageNumber
+            this.jumpPageNumber = ''
+            }
         }
-    },
-    jumpFirst: function() {
-        this.currentPage = 1
-    },
-    jumpLast: function(){
-        this.currentPage = this.pageLength
-    },
-    jumpPage: function() {
-        if (this.currentPage != this.jumpPageNumber && this.jumpPageNumber <= this.pageLength && this.jumpPageNumber > 0) {
-        this.currentPage = this.jumpPageNumber
-        this.jumpPageNumber = ''
-        }
-    }
     },
     watch: {
-    currentPage: function(newValue , oldValue){
-        // console.log('p', arguments)
-    }
+        currentPage: function(newValue , oldValue){
+            // console.log('p', arguments)
+        }
     }
 
 })
@@ -309,95 +309,95 @@ var pagination = Vue.extend({
 Vue.component('demo-grid', {
     template: '#grid-template',
     props: {
-    data: Array,
-    columns: Array,
-    filterKey: String,
-    pageSize: Number,
-    pagination: {
-        type: Boolean,
-        default: true
-    }
+        data: Array,
+        columns: Array,
+        filterKey: String,
+        pageSize: Number,
+        pagination: {
+            type: Boolean,
+            default: true
+        }
     },
     data: function () {
-    var sortOrders = {}
-    this.columns.forEach(function (key) {
-        sortOrders[key] = 1
-    })
-    return {
-        sortKey: '',
-        sortOrders: sortOrders,
-        currentPage: 1,
-        defaultPageSize: this.pageSize
-    }
+        var sortOrders = {}
+        this.columns.forEach(function (key) {
+            sortOrders[key] = 1
+        })
+        return {
+            sortKey: '',
+            sortOrders: sortOrders,
+            currentPage: 1,
+            defaultPageSize: this.pageSize
+        }
     },
     computed: {
-    currentData: function () {
-        var filter = this.filterKey.trim()
-        if (filter == '') {
-        var start = (this.currentPage - 1) * this.pageSize;
-        var end = start + this.pageSize;
-        return this.data.slice(start, end)
-        } else {
-        var tempArray = []
-        this.data.forEach(function(item){
-            for(i in item){
-            if(item[i].toString().indexOf(filter) != -1) {
-                tempArray.push(item)
-                break
+        currentData: function () {
+            var filter = this.filterKey.trim()
+            if (filter == '') {
+            var start = (this.currentPage - 1) * this.pageSize;
+            var end = start + this.pageSize;
+            return this.data.slice(start, end)
+            } else {
+            var tempArray = []
+            this.data.forEach(function(item){
+                for(i in item){
+                if(item[i].toString().indexOf(filter) != -1) {
+                    tempArray.push(item)
+                    break
+                }
+                }
+            })
+            return tempArray
             }
+        },
+        dataLength: function () {
+            var filter = this.filterKey.trim()
+            if (filter == '') {
+            this.pageSize = this.defaultPageSize
+            return this.data.length
+            }else{
+            this.pageSize = this.currentData.length
+            return this.currentData.length
             }
-        })
-        return tempArray
+        },
+        showPagination: function () {
+            return this.filterKey.trim() == '' ? true : false
         }
-    },
-    dataLength: function () {
-        var filter = this.filterKey.trim()
-        if (filter == '') {
-        this.pageSize = this.defaultPageSize
-        return this.data.length
-        }else{
-        this.pageSize = this.currentData.length
-        return this.currentData.length
-        }
-    },
-    showPagination: function () {
-        return this.filterKey.trim() == '' ? true : false
-    }
     },
     methods: {
-    sortBy: function (key) {
-        this.sortKey = key
-        this.sortOrders[key] = this.sortOrders[key] * -1
+        sortBy: function (key) {
+            this.sortKey = key
+            this.sortOrders[key] = this.sortOrders[key] * -1
 
-        // sort origin data
-        var sortOrder = this.sortOrders[key]
-        this.data.sort(function(a, b) {
-        if (a[key] == b[key]) {
-            return 0
-        } else {
-            return a[key] > b[key] ? sortOrder : -sortOrder
+            // sort origin data
+            var sortOrder = this.sortOrders[key]
+            this.data.sort(function(a, b) {
+            if (a[key] == b[key]) {
+                return 0
+            } else {
+                return a[key] > b[key] ? sortOrder : -sortOrder
+            }
+            })
+        },
+        editRow: function (row) {
+            console.log(row, this.data, this.columns)
+            row.id =  10
+        },
+        delRow: function (row) {
+            console.log(row, this)
+            // this.currentData.$remove(row)
+            this.data.$remove(row)
         }
-        })
-    },
-    editRow: function (row) {
-        console.log(row, this.data, this.columns)
-        row.id =  10
-    },
-    delRow: function (row) {
-        console.log(row, this)
-        // this.currentData.$remove(row)
-        this.data.$remove(row)
-    }
     },
     watch: {
-    currentPage: function(newValue , oldValue){
-        // console.log(arguments)
-    },
-    filterKey: function(newValue, oldValue){
-    }
+        currentPage: function(newValue , oldValue){
+            // console.log(arguments)
+        },
+        filterKey: function(newValue, oldValue){
+        }
     },
     components: {
-    'table-pagination': pagination
+        'table-pagination': pagination
     }
 })
 
@@ -405,18 +405,18 @@ Vue.component('demo-grid', {
 var demo = new Vue({
     el: '#demo',
     data: {
-    searchQuery: '',
-    gridColumns: ['id', 'name', 'power'],
-    gridData: [
-        { id: 1, name: 'Chuck Norris', power: Infinity },
-        { id: 2, name: 'Bruce Lee', power: 9000 },
-        { id: 3, name: 'Jackie Chan', power: 7000 },
-        { id: 4, name: 'Jet Li', power: 8000 },
-        { id: 5, name: 'Tim', power: 5000 },
-        { id: 6, name: 'Ryan', power: 6000 },
-        { id: 7, name: 'Haran', power: 4000 }
-    ],
-    pageSize: 3
+        searchQuery: '',
+        gridColumns: ['id', 'name', 'power'],
+        gridData: [
+            { id: 1, name: 'Chuck Norris', power: Infinity },
+            { id: 2, name: 'Bruce Lee', power: 9000 },
+            { id: 3, name: 'Jackie Chan', power: 7000 },
+            { id: 4, name: 'Jet Li', power: 8000 },
+            { id: 5, name: 'Tim', power: 5000 },
+            { id: 6, name: 'Ryan', power: 6000 },
+            { id: 7, name: 'Haran', power: 4000 }
+        ],
+        pageSize: 3
     }
 })
 
