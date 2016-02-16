@@ -150,6 +150,7 @@ th.active .arrow {
 
 <!-- component template -->
 <!-- | filterBy filterKey -->
+<!-- | orderBy sortKey sortOrders[sortKey] -->
 <script type="text/x-template" id="grid-template">
   <table>
     <thead>
@@ -169,7 +170,7 @@ th.active .arrow {
     <tbody>
       <tr v-for="
         entry in currentData
-        | orderBy sortKey sortOrders[sortKey]">
+        ">
         <td>{{ $index + 1 }}</td>
         <td v-for="key in columns">
           {{entry[key]}}
@@ -367,6 +368,16 @@ Vue.component('demo-grid', {
     sortBy: function (key) {
       this.sortKey = key
       this.sortOrders[key] = this.sortOrders[key] * -1
+
+      // sort origin data
+      var sortOrder = this.sortOrders[key]
+      this.data.sort(function(a, b) {
+        if (a[key] == b[key]) {
+          return 0
+        } else {
+          return a[key] > b[key] ? sortOrder : -sortOrder
+        }
+      })
     },
     editRow: function (row) {
       console.log(row, this.data, this.columns)
