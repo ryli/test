@@ -200,7 +200,7 @@ th.active .arrow {
     Search <input name="query" v-model="searchQuery">
     </form>
     <demo-grid
-        :data="gridData"
+        :data.sync="gridData"
         :columns="gridColumns"
         :filter-key="searchQuery"
         :page-size="pageSize"
