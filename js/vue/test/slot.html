@@ -9,30 +9,27 @@
 </head>
 <body>
 
+    <script type="text/x-template" id="multi-insertion">
+        <slot name="one"></slot>
+        <slot></slot>
+        <slot name="two"></slot>
+    </script>
+
     <div id="app">
         <multi-insertion>
             <p slot="one">One</p>
-              <p slot="two">Two</p>
-              <p>Default A</p>
+            <p slot="two">Two</p>
+            <p>Default A</p>
         </multi-insertion>
-    </div>
-
-    <div id="child">
-      <slot name="one"></slot>
-      <slot></slot>
-      <slot name="two"></slot>
     </div>
 
 
     <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
 
     <script>
-Vue.component('child', {
-    template: '#child'
-})
 
 Vue.component('multi-insertion', {
-    template: '#multi-insertion'
+    template: '#multi-insertion',
 })
 
 new Vue({
