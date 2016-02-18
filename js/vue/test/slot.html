@@ -13,11 +13,17 @@
         <slot name="one"></slot>
         <slot></slot>
         <slot name="two"></slot>
+        <h1>slot inner</h1>
     </script>
 
     <div id="app">
         <multi-insertion>
-            <p slot="one">One</p>
+            <div slot="one">
+                <p >One</p>
+                <ul>
+                    <li v-for="l in list">{{ l }}</li>
+                </ul>
+            </div>
             <p slot="two">Two</p>
             <p>Default A</p>
             <p>Default B</p>
@@ -34,7 +40,10 @@ Vue.component('multi-insertion', {
 })
 
 new Vue({
-    el: '#app'
+    el: '#app',
+    data: {
+        list: [1,2,3,4,5]
+    }
 })
     </script>
 </body>
